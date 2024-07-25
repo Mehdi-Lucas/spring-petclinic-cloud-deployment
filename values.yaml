@@ -1,0 +1,4 @@
+image:
+  repository: mehdilucasammar/spring-petclinic-cloud-config-server
+  pullPolicy: IfNotPresent
+  tag: xxxxxxxxxx
