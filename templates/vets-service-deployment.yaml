@@ -1,0 +1,63 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Values.vetsService.labels.app }}
+  name: {{ .Values.vetsService.name }}
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.vetsService.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.vetsService.selector.app }}
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.vetsService.labels.app }}
+    spec:
+      containers:
+      - image: {{ .Values.vetsService.image }}
+        name: {{ .Values.vetsService.name }}
+        imagePullPolicy: Always
+        livenessProbe:
+          httpGet:
+            port: 8080
+            path: /actuator/health/liveness
+          initialDelaySeconds: 90
+          periodSeconds: 5
+        readinessProbe:
+          httpGet:
+            port: 8080
+            path: /actuator/health/readiness
+          initialDelaySeconds: 15
+        lifecycle:
+          preStop:
+            exec:
+              command: ["sh", "-c", "sleep 10"]
+        resources:
+          limits:
+            memory: {{ .Values.vetsService.resources.limits.memory }}
+          requests:
+            cpu: {{ .Values.vetsService.resources.requests.cpu }}
+            memory: {{ .Values.vetsService.resources.requests.memory }}
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: kubernetes
+        - name: SPRING_DATASOURCE_URL
+          value: {{ .Values.vetsService.datasource.url }}
+        - name: SPRING_DATASOURCE_USERNAME
+          value: {{ .Values.vetsService.datasource.username }}
+        - name: SPRING_DATASOURCE_PASSWORD
+          valueFrom:
+             secretKeyRef:
+               name: {{ .Values.vetsService.datasource.secretName }}
+               key: {{ .Values.vetsService.datasource.secretKey }}
+        - name: MANAGEMENT_METRICS_EXPORT_WAVEFRONT_URI
+          value: proxy://wavefront-proxy.spring-petclinic.svc.cluster.local:2878
+        ports:
+        - containerPort: 8080
+        resources: {}
+      restartPolicy: Always
+status: {}

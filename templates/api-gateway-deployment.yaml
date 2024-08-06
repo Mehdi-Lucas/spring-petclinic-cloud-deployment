@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Values.apiGateway.labels.app }}
+  name: {{ .Values.apiGateway.name }}
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.apiGateway.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.apiGateway.selector.app }}
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.apiGateway.labels.app }}
+    spec:
+      containers:
+      - image: {{ .Values.apiGateway.image }}
+        name: {{ .Values.apiGateway.name }}
+        imagePullPolicy: Always
+        livenessProbe:
+          httpGet:
+            port: 8080
+            path: /actuator/health/liveness
+          initialDelaySeconds: 90
+          periodSeconds: 5
+        readinessProbe:
+          httpGet:
+            port: 8080
+            path: /actuator/health/readiness
+          initialDelaySeconds: 15
+        lifecycle:
+          preStop:
+            exec:
+              command: ["sh", "-c", "sleep 10"]
+        resources:
+          limits:
+            memory: {{ .Values.apiGateway.resources.limits.memory }}
+          requests:
+            cpu: {{ .Values.apiGateway.resources.requests.cpu }}
+            memory: {{ .Values.apiGateway.resources.requests.memory }}
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: kubernetes
+        - name: MANAGEMENT_METRICS_EXPORT_WAVEFRONT_URI
+          value: proxy://wavefront-proxy.spring-petclinic.svc.cluster.local:2878
+        ports:
+        - containerPort: {{ .Values.apiGateway.containerPort }}
+      restartPolicy: Always
+status: {}

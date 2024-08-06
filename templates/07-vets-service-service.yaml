@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: {{ .Values.vetsService.labels.app }}
+  name: {{ .Values.vetsService.name }}
+  namespace: {{ .Values.namespace }}
+spec:
+  ports:
+  - name: "http"
+    port: {{ .Values.vetsService.service.port }}
+    targetPort: {{ .Values.vetsService.service.targetPort }}
+  selector:
+    app: {{ .Values.vetsService.selector.app }}
+status:
+  loadBalancer: {}

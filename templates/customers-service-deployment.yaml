@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Values.customersService.labels.app }}
+  name: {{ .Values.customersService.name }}
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.customersService.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.customersService.selector.app }}
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.customersService.labels.app }}
+    spec:
+      containers:
+      - image: {{ .Values.customersService.image }}
+        name: {{ .Values.customersService.name }}
+        imagePullPolicy: Always
+        livenessProbe:
+          httpGet:
+            port: 8080
+            path: /actuator/health/liveness
+          initialDelaySeconds: 90
+          periodSeconds: 5
+        readinessProbe:
+          httpGet:
+            port: 8080
+            path: /actuator/health/readiness
+          initialDelaySeconds: 15
+        lifecycle:
+          preStop:
+            exec:
+              command: ["sh", "-c", "sleep 10"]
+        resources:
+          limits:
+            memory: {{ .Values.customersService.resources.limits.memory }}
+          requests:
+            cpu: {{ .Values.customersService.resources.requests.cpu }}
+            memory: {{ .Values.customersService.resources.requests.memory }}
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: kubernetes
+        - name: SPRING_DATASOURCE_URL
+          value: {{ .Values.customersService.datasource.url }}
+        - name: SPRING_DATASOURCE_USERNAME
+          value: {{ .Values.customersService.datasource.username }}
+        - name: SPRING_DATASOURCE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.customersService.datasource.secretName }}
+              key: {{ .Values.customersService.datasource.secretKey }}
+        - name: MANAGEMENT_METRICS_EXPORT_WAVEFRONT_URI
+          value: proxy://wavefront-proxy.spring-petclinic.svc.cluster.local:2878
+        ports:
+        - containerPort: 8080
+      restartPolicy: Always
+status: {}

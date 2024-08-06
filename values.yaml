@@ -1,4 +1,107 @@
-image:
-  repository: mehdilucasammar/spring-petclinic-cloud-config-server
-  pullPolicy: IfNotPresent
-  tag: ba2b7d51ff8e23a015cfc9bc4f70f65e04912252
+namespace: test
+
+wavefront:
+  url: https://wavefront.surf
+  apiToken: 2e41f7cf-1111-2222-3333-7397a56113ca
+
+vets-db-mysql:
+  auth:
+    database: service_instance_db
+
+visits-db-mysql:
+  auth:
+    database: service_instance_db
+
+customers-db-mysql:
+  auth:
+    database: service_instance_db
+
+apiGateway:
+  labels:
+    app: api-gateway
+  name: api-gateway
+  selector:
+    app: api-gateway
+  service:
+    port: 80
+    targetPort: 8080
+    type: LoadBalancer
+  replicaCount: 1
+  image: mehdilucasammar/spring-petclinic-cloud-api-gateway:latest
+  resources:
+    limits:
+      memory: 1Gi
+    requests:
+      cpu: 2000m
+      memory: 1Gi
+  containerPort: 8080
+
+customersService:
+  labels:
+    app: customers-service
+  name: customers-service
+  selector:
+    app: customers-service
+  service:
+    port: 8080
+    targetPort: 8080
+  replicaCount: 1
+  image: mehdilucasammar/spring-petclinic-cloud-customers-service:latest
+  resources:
+    limits:
+      memory: 1Gi
+    requests:
+      cpu: 2000m
+      memory: 1Gi
+  datasource:
+    url: jdbc:mysql://customers-db-mysql.spring-petclinic.svc.cluster.local:3306/service_instance_db?queryInterceptors=brave.mysql8.TracingQueryInterceptor&exceptionInterceptors=brave.mysql8.TracingExceptionInterceptor&zipkinServiceName=customers-db
+    username: root
+    secretName: customers-db-mysql
+    secretKey: mysql-root-password
+
+vetsService:
+  labels:
+    app: vets-service
+  name: vets-service
+  selector:
+    app: vets-service
+  service:
+    port: 8080
+    targetPort: 8080
+  replicaCount: 1
+  image: mehdilucasammar/spring-petclinic-cloud-vets-service:latest
+  resources:
+    limits:
+      memory: 1Gi
+    requests:
+      cpu: 2000m
+      memory: 1Gi
+  datasource:
+    url: jdbc:mysql://vets-db-mysql.spring-petclinic.svc.cluster.local:3306/service_instance_db?queryInterceptors=brave.mysql8.TracingQueryInterceptor&exceptionInterceptors=brave.mysql8.TracingExceptionInterceptor&zipkinServiceName=vets-db
+    username: root
+    secretName: vets-db-mysql
+    secretKey: mysql-root-password
+
+visitsService:
+  labels:
+    app: visits-service
+  name: visits-service
+  selector:
+    app: visits-service
+  replicaCount: 1
+  image: mehdilucasammar/spring-petclinic-cloud-visits-service:latest
+  service:
+    port: 8080
+    targetPort: 8080
+  resources:
+    limits:
+      memory: 1Gi
+      cpu: 2000m
+    requests:
+      memory: 1Gi
+      cpu: 2000m
+  datasource:
+    url: jdbc:mysql://visits-db-mysql.spring-petclinic.svc.cluster.local:3306/service_instance_db?queryInterceptors=brave.mysql8.TracingQueryInterceptor&exceptionInterceptors=brave.mysql8.TracingExceptionInterceptor&zipkinServiceName=visits-db
+    username: root    
+    secretName: visits-db-mysql
+    secretKey: mysql-root-password

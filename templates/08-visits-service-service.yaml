@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: {{ .Values.visitsService.labels.app }}
+  name: {{ .Values.visitsService.name }}
+  namespace: {{ .Values.namespace }}
+spec:
+  ports:
+  - name: "http"
+    port: {{ .Values.visitsService.service.port }}
+    targetPort: {{ .Values.visitsService.service.targetPort }}
+  selector:
+    app: {{ .Values.visitsService.selector.app }}
+status:
+  loadBalancer: {}

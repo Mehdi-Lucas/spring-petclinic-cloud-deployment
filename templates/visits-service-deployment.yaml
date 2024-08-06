@@ -1,0 +1,63 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Values.visitsService.labels.app }}
+  name: {{ .Values.visitsService.name }}
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.visitsService.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.visitsService.selector.app }}
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.visitsService.labels.app }}
+    spec:
+      containers:
+      - image: {{ .Values.visitsService.image }}
+        name: {{ .Values.visitsService.name }}
+        imagePullPolicy: Always
+        livenessProbe:
+          httpGet:
+            port: 8080
+            path: /actuator/health/liveness
+          initialDelaySeconds: 90
+          periodSeconds: 5
+        readinessProbe:
+          httpGet:
+            port: 8080
+            path: /actuator/health/readiness
+          initialDelaySeconds: 15
+        lifecycle:
+          preStop:
+            exec:
+              command: ["sh", "-c", "sleep 10"]
+        resources:
+          limits:
+            memory: {{ .Values.visitsService.resources.limits.memory }}
+          requests:
+            cpu: {{ .Values.visitsService.resources.requests.cpu }}
+            memory: {{ .Values.visitsService.resources.requests.memory }}
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: kubernetes
+        - name: SPRING_DATASOURCE_URL
+          value: {{ .Values.visitsService.datasource.url }}
+        - name: SPRING_DATASOURCE_USERNAME
+          value: {{ .Values.visitsService.datasource.username }}
+        - name: SPRING_DATASOURCE_PASSWORD
+          valueFrom:
+             secretKeyRef:
+               name: {{ .Values.visitsService.datasource.secretName }}
+               key: {{ .Values.visitsService.datasource.secretKey }}
+        - name: MANAGEMENT_METRICS_EXPORT_WAVEFRONT_URI
+          value: proxy://wavefront-proxy.spring-petclinic.svc.cluster.local:2878
+        ports:
+        - containerPort: 8080
+        resources: {}
+      restartPolicy: Always
+status: {}
