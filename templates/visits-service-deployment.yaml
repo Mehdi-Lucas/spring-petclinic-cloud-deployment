@@ -18,7 +18,7 @@ spec:
         app: {{ .Values.visitsService.labels.app }}
     spec:
       containers:
-      - image: {{ .Values.visitsService.image }}
+      - image: {{ .Values.visitsService.image }}:{{ .Values.tag }}
         name: {{ .Values.visitsService.name }}
         imagePullPolicy: Always
         livenessProbe:
