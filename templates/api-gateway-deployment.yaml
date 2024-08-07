@@ -17,7 +17,7 @@ spec:
         app: {{ .Values.apiGateway.labels.app }}
     spec:
       containers:
-      - image: {{ .Values.apiGateway.image }}
+      - image: {{ .Values.apiGateway.image }}:{{ .Values.tag }}
         name: {{ .Values.apiGateway.name }}
         imagePullPolicy: Always
         livenessProbe:
