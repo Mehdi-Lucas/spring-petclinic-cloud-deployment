@@ -17,7 +17,7 @@ spec:
         app: {{ .Values.customersService.labels.app }}
     spec:
       containers:
-      - image: {{ .Values.customersService.image }}
+      - image: {{ .Values.customersService.image }}:{{ .Values.tag }}
         name: {{ .Values.customersService.name }}
         imagePullPolicy: Always
         livenessProbe:
