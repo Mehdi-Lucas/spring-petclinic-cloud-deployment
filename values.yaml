@@ -1,4 +1,5 @@
-namespace: test
+namespace: prod
+tag: latest
 
 wavefront:
   url: https://wavefront.surf
@@ -27,7 +28,7 @@ apiGateway:
     targetPort: 8080
     type: LoadBalancer
   replicaCount: 1
-  image: mehdilucasammar/spring-petclinic-cloud-api-gateway:latest
+  image: mehdilucasammar/spring-petclinic-cloud-api-gateway
   resources:
     limits:
       memory: 1Gi
@@ -46,7 +47,7 @@ customersService:
     port: 8080
     targetPort: 8080
   replicaCount: 1
-  image: mehdilucasammar/spring-petclinic-cloud-customers-service:latest
+  image: mehdilucasammar/spring-petclinic-cloud-customers-service
   resources:
     limits:
       memory: 1Gi
@@ -69,7 +70,7 @@ vetsService:
     port: 8080
     targetPort: 8080
   replicaCount: 1
-  image: mehdilucasammar/spring-petclinic-cloud-vets-service:latest
+  image: mehdilucasammar/spring-petclinic-cloud-vets-service
   resources:
     limits:
       memory: 1Gi
@@ -89,7 +90,7 @@ visitsService:
   selector:
     app: visits-service
   replicaCount: 1
-  image: mehdilucasammar/spring-petclinic-cloud-visits-service:latest
+  image: mehdilucasammar/spring-petclinic-cloud-visits-service
   service:
     port: 8080
     targetPort: 8080
