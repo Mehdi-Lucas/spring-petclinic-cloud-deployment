@@ -18,7 +18,7 @@ spec:
         app: {{ .Values.vetsService.labels.app }}
     spec:
       containers:
-      - image: {{ .Values.vetsService.image }}
+      - image: {{ .Values.vetsService.image }}:{{ .Values.tag }}
         name: {{ .Values.vetsService.name }}
         imagePullPolicy: Always
         livenessProbe:
