@@ -57,7 +57,7 @@ customersService:
   datasource:
     url: jdbc:mysql://customers-db-mysql.spring-petclinic.svc.cluster.local:3306/service_instance_db?queryInterceptors=brave.mysql8.TracingQueryInterceptor&exceptionInterceptors=brave.mysql8.TracingExceptionInterceptor&zipkinServiceName=customers-db
     username: root
-    secretName: customers-db-mysql
+    secretName: petclinic-customers-db-mysql
     secretKey: mysql-root-password
 
 vetsService:
@@ -80,7 +80,7 @@ vetsService:
   datasource:
     url: jdbc:mysql://vets-db-mysql.spring-petclinic.svc.cluster.local:3306/service_instance_db?queryInterceptors=brave.mysql8.TracingQueryInterceptor&exceptionInterceptors=brave.mysql8.TracingExceptionInterceptor&zipkinServiceName=vets-db
     username: root
-    secretName: vets-db-mysql
+    secretName: petclinic-vets-db-mysql
     secretKey: mysql-root-password
 
 visitsService:
@@ -104,5 +104,5 @@ visitsService:
   datasource:
     url: jdbc:mysql://visits-db-mysql.spring-petclinic.svc.cluster.local:3306/service_instance_db?queryInterceptors=brave.mysql8.TracingQueryInterceptor&exceptionInterceptors=brave.mysql8.TracingExceptionInterceptor&zipkinServiceName=visits-db
     username: root    
-    secretName: visits-db-mysql
+    secretName: petclinic-visits-db-mysql
     secretKey: mysql-root-password
