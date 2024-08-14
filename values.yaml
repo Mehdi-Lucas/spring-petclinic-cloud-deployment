@@ -55,7 +55,7 @@ customersService:
       cpu: 200m
       memory: 1Gi
   datasource:
-    url: jdbc:mysql://customers-db-mysql.prod.svc.cluster.local:3306/service_instance_db?queryInterceptors=brave.mysql8.TracingQueryInterceptor&exceptionInterceptors=brave.mysql8.TracingExceptionInterceptor&zipkinServiceName=customers-db
+    url: jdbc:mysql://petclinic-customers-db-mysql.prod.svc.cluster.local:3306/service_instance_db?queryInterceptors=brave.mysql8.TracingQueryInterceptor&exceptionInterceptors=brave.mysql8.TracingExceptionInterceptor&zipkinServiceName=customers-db
     username: root
     secretName: petclinic-customers-db-mysql
     secretKey: mysql-root-password
@@ -78,7 +78,7 @@ vetsService:
       cpu: 200m
       memory: 1Gi
   datasource:
-    url: jdbc:mysql://vets-db-mysql.prod.svc.cluster.local:3306/service_instance_db?queryInterceptors=brave.mysql8.TracingQueryInterceptor&exceptionInterceptors=brave.mysql8.TracingExceptionInterceptor&zipkinServiceName=vets-db
+    url: jdbc:mysql://petclinic-vets-db-mysql.prod.svc.cluster.local:3306/service_instance_db?queryInterceptors=brave.mysql8.TracingQueryInterceptor&exceptionInterceptors=brave.mysql8.TracingExceptionInterceptor&zipkinServiceName=vets-db
     username: root
     secretName: petclinic-vets-db-mysql
     secretKey: mysql-root-password
@@ -102,7 +102,7 @@ visitsService:
       memory: 1Gi
       cpu: 200m
   datasource:
-    url: jdbc:mysql://visits-db-mysql.prod.svc.cluster.local:3306/service_instance_db?queryInterceptors=brave.mysql8.TracingQueryInterceptor&exceptionInterceptors=brave.mysql8.TracingExceptionInterceptor&zipkinServiceName=visits-db
+    url: jdbc:mysql://petclinic-visits-db-mysql.prod.svc.cluster.local:3306/service_instance_db?queryInterceptors=brave.mysql8.TracingQueryInterceptor&exceptionInterceptors=brave.mysql8.TracingExceptionInterceptor&zipkinServiceName=visits-db
     username: root    
     secretName: petclinic-visits-db-mysql
     secretKey: mysql-root-password
