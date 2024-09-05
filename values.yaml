@@ -1,5 +1,5 @@
 namespace: prod
-tag: 29b253b460dec296964877fd28ef89fa2789f616
+tag: 32c687dcf278a4d634920191bbf1e3765454d688
 
 wavefront:
   url: https://wavefront.surf
